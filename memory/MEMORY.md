@@ -1,0 +1,1 @@
+- [Chinese UI preference](user_chinese_ui.md) — 页面默认用中文渲染
