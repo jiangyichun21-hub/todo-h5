@@ -21,6 +21,7 @@ export default function Home() {
   const [filter, setFilter] = useState<Filter>("all");
   const [loading, setLoading] = useState(true);
   const [nickname, setNickname] = useState("");
+  const [toast, setToast] = useState("");
   const router = useRouter();
 
   const fetchTodos = useCallback(async () => {
@@ -52,9 +53,17 @@ export default function Home() {
     return () => listener?.subscription.unsubscribe();
   }, [router, fetchTodos]);
 
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 2000);
+  };
+
   const addTodo = async () => {
     const text = input.trim();
-    if (!text) return;
+    if (!text) {
+      showToast("请填写待办内容");
+      return;
+    }
 
     const { data } = await supabase
       .from("todos")
@@ -118,6 +127,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-zinc-100 dark:bg-black font-sans">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 text-sm px-5 py-2.5 rounded-full shadow-xl animate-[fade-in_0.2s_ease-out]">
+          {toast}
+        </div>
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-200/60 dark:border-zinc-800">
         <div className="mx-auto max-w-lg px-4 pt-4 pb-3">
